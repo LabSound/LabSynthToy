@@ -1,0 +1,6 @@
+[submodule "TinySoundFont"]
+	path = TinySoundFont
+	url = https://github.com/schellingb/TinySoundFont.git
+[submodule "LabSound"]
+	path = LabSound
+	url = https://github.com/LabSound/LabSound.git
