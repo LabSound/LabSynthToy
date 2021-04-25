@@ -1,5 +1,5 @@
 
-cmake_minimum_required (VERSION 3.4)
+cmake_minimum_required (VERSION 3.13)
 project(LabSynthToy)
 
 # Don't report that sample file installation up to date
@@ -8,6 +8,8 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 set(LABSYNTHTOY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 configure_file("${LABSYNTHTOY_ROOT}/LabSynthToy.config.h" "${LABSYNTHTOY_ROOT}/LabSynthToy.h" @ONLY)
 
+#option(LABSOUND_USE_MINIAUDIO "Use miniaudio" OFF)
+#option(LABSOUND_USE_RTAUDIO "Use RtAudio" ON)
 add_subdirectory(LabSound)
 
 if (APPLE)

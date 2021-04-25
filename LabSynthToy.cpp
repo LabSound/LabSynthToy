@@ -210,9 +210,9 @@ int main(int argc, char *argv[]) try
     lab::AudioContext& ac = *context.get();
     //tsf_two_notes(ac);
     //tsf_test_sf2(ac);
-    //tsf_test_tml(ac);
+    tsf_test_tml(ac);
     //test_template_node(ac);
-    test_predictive_timing(ac);
+    //test_predictive_timing(ac);
     return EXIT_SUCCESS;
 }
 catch (const std::exception & e)
