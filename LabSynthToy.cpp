@@ -139,24 +139,24 @@ void tsf_test_tml(lab::AudioContext& ac)
 
         while (curr_MidiMessage && curr_MidiMessage->time <= until)
         {
-            float when = (float(curr_MidiMessage->time) - elapsed_ms) * 1e-3;
+            double when = (float(curr_MidiMessage->time) - elapsed_ms) * 1e-3;
             //printf("%f\n", when);
             switch (curr_MidiMessage->type)
             {
             case TML_PROGRAM_CHANGE: //channel program (preset) change (special handling for 10th MIDI channel with drums)
-                tsfNode->channelSetPreset(when, curr_MidiMessage->channel, curr_MidiMessage->program, curr_MidiMessage->channel == 9);
+                tsfNode->channelSetPreset((float)when, curr_MidiMessage->channel, curr_MidiMessage->program, curr_MidiMessage->channel == 9);
                 break;
             case TML_NOTE_ON: //play a note
-                tsfNode->channelNoteOn(when, curr_MidiMessage->channel, curr_MidiMessage->key, curr_MidiMessage->velocity / 127.0f);
+                tsfNode->channelNoteOn((float)when, curr_MidiMessage->channel, curr_MidiMessage->key, curr_MidiMessage->velocity / 127.0f);
                 break;
             case TML_NOTE_OFF: //stop a note
-                tsfNode->channelNoteOff(when, curr_MidiMessage->channel, curr_MidiMessage->key);
+                tsfNode->channelNoteOff((float)when, curr_MidiMessage->channel, curr_MidiMessage->key);
                 break;
             case TML_PITCH_BEND: //pitch wheel modification
-                tsfNode->channelSetPitchWheel(when, curr_MidiMessage->channel, curr_MidiMessage->pitch_bend);
+                tsfNode->channelSetPitchWheel((float)when, curr_MidiMessage->channel, curr_MidiMessage->pitch_bend);
                 break;
             case TML_CONTROL_CHANGE: //MIDI controller messages
-                tsfNode->channelMidiControl(when, curr_MidiMessage->channel, curr_MidiMessage->control, curr_MidiMessage->control_value);
+                tsfNode->channelMidiControl((float)when, curr_MidiMessage->channel, curr_MidiMessage->control, curr_MidiMessage->control_value);
                 break;
             }
             curr_MidiMessage = curr_MidiMessage->next;
@@ -169,19 +169,38 @@ void tsf_test_tml(lab::AudioContext& ac)
     tml_free(TinyMidiLoader);
 }
 
-void test_timing(lab::AudioContext& ac)
+void test_template_node(lab::AudioContext& ac)
 {
+    // schedule some events for the future, they should produce a tick a second for 20 seconds.
     std::shared_ptr<LabSoundTemplateNode> timing(new LabSoundTemplateNode(ac));
     ac.connect(ac.device(), timing, 0, 0);
     int id[20] = {
         1,2,15,4,5,6,11,16,7,8,3,12,10,17,18,13,14,9,19,20
     };
     for (int i = 0; i < 20; ++i)
-        timing->realtimeEvent(double(id[i]), i);
+        timing->realtimeEvent(float(id[i]), i);
 
     std::this_thread::sleep_for(std::chrono::seconds(20));
 }
 
+void test_predictive_timing(lab::AudioContext& ac)
+{
+    double start = ac.predictedCurrentTime();
+    double now = start;
+
+    auto reference_start = std::chrono::high_resolution_clock::now();
+    auto reference_now = reference_start;
+    std::chrono::duration<double> elapsed = reference_now - reference_start;
+
+    while (elapsed.count() < 180) 
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds((rand() & 0xff) * 10));
+        now = ac.predictedCurrentTime();
+        reference_now = std::chrono::high_resolution_clock::now();
+        elapsed = reference_now - reference_start;
+        printf("chrono: %g : labsound: %g delta: %g\n", elapsed.count(), now - start, elapsed.count() - now + start);
+    }
+}
 
 int main(int argc, char *argv[]) try
 {
@@ -191,8 +210,9 @@ int main(int argc, char *argv[]) try
     lab::AudioContext& ac = *context.get();
     //tsf_two_notes(ac);
     //tsf_test_sf2(ac);
-    tsf_test_tml(ac);
-    //test_timing(ac);
+    //tsf_test_tml(ac);
+    //test_template_node(ac);
+    test_predictive_timing(ac);
     return EXIT_SUCCESS;
 }
 catch (const std::exception & e)
