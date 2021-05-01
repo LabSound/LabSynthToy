@@ -207,14 +207,13 @@ void test_predictive_timing(lab::AudioContext& ac)
 }
 
 void test_pocketmod(lab::AudioContext& ac)
-{
-    
+{   
     std::shared_ptr<PocketModNode> pocketmod(new PocketModNode(ac));
     ac.connect(ac.device(), pocketmod, 0, 0);
     std::string path = synth_toy_asset_base;
-    path += "/bananasplit.mod";
+    path += "/elysium.mod";
     pocketmod->loadMOD(path.c_str());
-    std::this_thread::sleep_for(std::chrono::seconds(120));
+    std::this_thread::sleep_for(std::chrono::seconds(180));
 }
 
 int main(int argc, char *argv[]) try

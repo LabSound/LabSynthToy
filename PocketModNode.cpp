@@ -39,7 +39,7 @@ struct PocketModNode::Detail
     moodycamel::ConcurrentQueue<PocketModNodeEvent> incoming;
     lab::AudioContext* ac = nullptr;
     
-    float pocketmod_render_buffer[1024];
+    std::vector<float> pocketmod_render_buffer;
     
     pocketmod_context context;
     size_t mod_size = 0;
@@ -161,12 +161,13 @@ void PocketModNode::process(ContextRenderLock &r, int bufferSize)
     
     if (_detail->mod_playing)
     {
+        if (_detail->pocketmod_render_buffer.size() < bufferSize * 2)
+            _detail->pocketmod_render_buffer.resize(bufferSize * 2);
+
         int i = 0;
         while (i < bufferSize)
         {
-            // over-rendering the buffer, as pocketmod doesn't seem to work with buffer sizes
-            // other than 1024.
-            i += pocketmod_render(&_detail->context, &_detail->pocketmod_render_buffer[i], 1024);//  AudioNode::ProcessingSizeInFrames - i);
+            i += pocketmod_render(&_detail->context, &_detail->pocketmod_render_buffer[i], bufferSize * 2 * sizeof(float));
         }
         
         float* dataL = outputBus->channel(0)->mutableData();
