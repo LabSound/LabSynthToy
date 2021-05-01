@@ -1,27 +1,28 @@
 
-#ifndef LABSOUND_TEMPLATE_NODE
-#define LABSOUND_TEMPLATE_NODE
+
+#ifndef POCKETMOD_NODE
+#define POCKETMOD_NODE
 
 #include <LabSound/core/AudioNode.h>
 
-class LabSoundTemplateNode : public lab::AudioNode
+class PocketModNode : public lab::AudioNode
 {
     struct Detail;
     Detail* _detail = nullptr;
     static bool s_registered;
 
 public:
-    LabSoundTemplateNode(lab::AudioContext & ac);
-    virtual ~LabSoundTemplateNode();
+    PocketModNode(lab::AudioContext & ac);
+    virtual ~PocketModNode();
 
-    static const char* static_name() { return "LabSoundTemplate"; }
+    static const char* static_name() { return "PocketMod"; }
     virtual const char* name() const override { return static_name(); }
 
     // AudioNode
     virtual void process(lab::ContextRenderLock &, int bufferSize) override;
     virtual void reset(lab::ContextRenderLock &) override;
 
-    void realtimeEvent(float when, int identifier);
+    void loadMOD(const char* path);
 
 private:
     virtual bool propagatesSilence(lab::ContextRenderLock& r) const override { return false; }

@@ -30,6 +30,8 @@ add_executable(LabSynthToy
     TinySoundFont/tsf.h
     TinySoundFontNode.h
     TinySoundFontNode.cpp
+    PocketModNode.h
+    PocketModNode.cpp
     LabSoundTemplateNode.h
     LabSoundTemplateNode.cpp
     LabSynthToy.cpp)
@@ -41,4 +43,15 @@ install(TARGETS LabSynthToy RUNTIME DESTINATION bin)
 install(FILES
     "${LABSYNTHTOY_ROOT}/TinySoundFont/examples/florestan-subset.sf2"
     "${LABSYNTHTOY_ROOT}/TinySoundFont/examples/venture.mid"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/bananasplit.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/chill.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/elysium.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/king.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/nemesis.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/overture.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/spacedeb.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/stardstm.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/sundance.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/sundown.mod"
+    "${LABSYNTHTOY_ROOT}/pocketmod/songs/supernova.mod"
     DESTINATION share/LabSynthToy)

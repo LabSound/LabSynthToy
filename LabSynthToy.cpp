@@ -2,6 +2,7 @@
 #include "LabSynthToy.h"
 #include "TinySoundFontNode.h"
 #include "LabSoundTemplateNode.h"
+#include "PocketModNode.h"
 
 #define TML_IMPLEMENTATION
 #include "TinySoundFont/tml.h"
@@ -119,7 +120,10 @@ void tsf_test_tml(lab::AudioContext& ac)
     std::string midi_file = std::string(synth_toy_asset_base) + "venture.mid";
     tml_message* TinyMidiLoader = tml_load_filename(midi_file.c_str());
     if (!TinyMidiLoader)
+    {
+        printf("Couldn't open %s\n", midi_file.c_str());
         return;
+    }
 
     std::string sf2_file = std::string(synth_toy_asset_base) + "florestan-subset.sf2";
     std::shared_ptr<TinySoundFontNode> tsfNode(new TinySoundFontNode(ac));
@@ -202,6 +206,15 @@ void test_predictive_timing(lab::AudioContext& ac)
     }
 }
 
+void test_pocketmod(lab::AudioContext& ac)
+{
+    
+    std::shared_ptr<PocketModNode> pocketmod(new PocketModNode(ac));
+    ac.connect(ac.device(), pocketmod, 0, 0);
+    pocketmod->loadMOD("/Users/dp/Projects/LabSound/install-synth/install/share/LabSynthToy/bananasplit.mod");
+    std::this_thread::sleep_for(std::chrono::seconds(20));
+}
+
 int main(int argc, char *argv[]) try
 {
     std::unique_ptr<lab::AudioContext> context;
@@ -210,9 +223,10 @@ int main(int argc, char *argv[]) try
     lab::AudioContext& ac = *context.get();
     //tsf_two_notes(ac);
     //tsf_test_sf2(ac);
-    tsf_test_tml(ac);
+    //tsf_test_tml(ac);
     //test_template_node(ac);
     //test_predictive_timing(ac);
+    test_pocketmod(ac);
     return EXIT_SUCCESS;
 }
 catch (const std::exception & e)
