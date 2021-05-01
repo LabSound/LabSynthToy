@@ -4,6 +4,3 @@
 [submodule "LabSound"]
 	path = LabSound
 	url = https://github.com/LabSound/LabSound.git
-[submodule "pocketmod"]
-	path = pocketmod
-	url = https://github.com/rombankzero/pocketmod.git
