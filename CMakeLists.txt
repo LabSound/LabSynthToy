@@ -34,6 +34,7 @@ add_executable(LabSynthToy
     PocketModNode.cpp
     LabSoundTemplateNode.h
     LabSoundTemplateNode.cpp
+    LabSynthToy.h
     LabSynthToy.cpp)
 
 target_link_libraries(LabSynthToy Lab::Sound ${PLATFORM_LIBS})

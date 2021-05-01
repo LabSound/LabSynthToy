@@ -211,8 +211,10 @@ void test_pocketmod(lab::AudioContext& ac)
     
     std::shared_ptr<PocketModNode> pocketmod(new PocketModNode(ac));
     ac.connect(ac.device(), pocketmod, 0, 0);
-    pocketmod->loadMOD("/Users/dp/Projects/LabSound/install-synth/install/share/LabSynthToy/bananasplit.mod");
-    std::this_thread::sleep_for(std::chrono::seconds(20));
+    std::string path = synth_toy_asset_base;
+    path += "/bananasplit.mod";
+    pocketmod->loadMOD(path.c_str());
+    std::this_thread::sleep_for(std::chrono::seconds(120));
 }
 
 int main(int argc, char *argv[]) try
